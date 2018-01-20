@@ -1,3 +1,5 @@
+%define RETPOLINE
+
 bits 64
 
 section .data
@@ -23,9 +25,9 @@ dq hot_addr
 dq hot_addr
 dq hot_addr
 dq hot_addr
-; set hot_addr to make the warm access cold.
+; set to hot_addr to make the warm access cold.
 ; set to warm_addr to make the warm access 
-; cold thanks to speculative execution.
+; hot thanks to speculative execution.
 dq warm_addr
 
 align 64
@@ -52,7 +54,7 @@ dq read_hot
 ; to read from warm_addr.
 dq read_nop
 
-align 64
+align 128
 hot_addr:
 times 64 db 0x0
 
@@ -107,13 +109,33 @@ read_loop_head:
 ; At every iteration, the target must be uncached
 ; so that execution can proceed down the speculative
 ; path long enough to do the memory access.
+; This is not strictly necessary. See "FYI" below
+; for additional information.
 	clflush [call_targets]
 	mfence
 
 	mov r9, [read_targets + rax*8]
 	mov r10, [call_targets + rax*8]
 
+%ifdef RETPOLINE
+	jmp set_up_return
+inner_indirect_branch:
+	call set_up_target
+capture_spec:
+	pause
+	jmp capture_spec
+set_up_target:
+	mov [rsp], r10
+	ret
+set_up_return:
+	call inner_indirect_branch
+%else
+; FYI: If you take out the clflush above for the call_targets,
+; the branch predictor has enough time to do its "bad" behavior
+; if the number of nops here does not exceed ~10. Fascinating.
+;	times 12 nop
 	call r10
+%endif
 
 	inc rax
 	cmp rax, rbx

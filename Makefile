@@ -1,9 +1,9 @@
-all: btb cache-timing
+all: call cache-timing
 
-btb: btb.s
-	nasm -felf64 btb.s && gcc btb.o -o btb 
+call: call.s
+	nasm -felf64 call.s && gcc call.o -o call
 cache-timing: cache-timing.s
 	nasm -felf64 cache-timing.s && gcc cache-timing.o -o cache-timing 
 
 clean:
-	rm -f core cache-timing btb *.o
+	rm -f core cache-timing call *.o
