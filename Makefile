@@ -1,9 +1,11 @@
-all: call cache-timing
+all: jmp call cache-timing
 
+jmp: jmp.s
+	nasm -felf64 jmp.s && gcc jmp.o -o jmp
 call: call.s
 	nasm -felf64 call.s && gcc call.o -o call
 cache-timing: cache-timing.s
 	nasm -felf64 cache-timing.s && gcc cache-timing.o -o cache-timing 
 
 clean:
-	rm -f core cache-timing call *.o
+	rm -f core cache-timing call jmp *.o
