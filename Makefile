@@ -1,5 +1,7 @@
-all: jmp call cache-timing jmp-memory
+all: jmp call cache-timing jmp-memory call-memory
 
+call-memory: call-memory.s
+	nasm -felf64 call-memory.s && gcc call-memory.o -o call-memory
 jmp-memory: jmp-memory.s
 	nasm -felf64 jmp-memory.s && gcc jmp-memory.o -o jmp-memory
 jmp: jmp.s
