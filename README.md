@@ -18,5 +18,7 @@ the define at the top of the .s files.
 
 1. Intel(R) Xeon(R) CPU E5645  @ 2.40GHz - The effects are pronounced. The 'warm val' when unprotected is approximately 3071262. The 'warm val' when protected is approximately 10089712. That is about a 3.28x factor. CPU's memory speed is  32 GB/s. 
 
+1. Intel(R) Xeon(R) CPU X7550  @ 2.00GHz - The effects are there, but not as visible. The 'warm val' when unprotected is approximately 10316529. The 'warm val' when protected is approximately 15005052. That is about a 1.45x factor.  CPU's memory speed is unknown.
+
 # Tentative Conclusions:
 The visibility of the effect is correlated with the memory speed. The faster the memory speed, the faster the speculative execution is able to complete the speculative load and deposit its contents in memory.
