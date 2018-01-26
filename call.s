@@ -1,5 +1,3 @@
-%define RETPOLINE
-
 bits 64
 
 section .data
